@@ -29,7 +29,12 @@ class Controller_Welcome extends Controller
 	 */
 	public function action_index()
 	{
-		return Response::forge(View::forge('welcome/index'));
+		// 配列に入れてviewに送るパターン
+		$data = array();
+		$data['name'] = 'name';
+		$data['body'] = 'body';
+
+		return Response::forge(View::forge('welcome/index',$data));
 	}
 
 	/**
@@ -41,7 +46,43 @@ class Controller_Welcome extends Controller
 	 */
 	public function action_hello()
 	{
-		return Response::forge(Presenter::forge('welcome/hello'));
+		// オブジェクトを生成して受けたわすパターン
+		$view = View::forge('welcome/hello');
+		$view->set('name', 'hello名前');
+		$view->set('title', 'helloタイトル');
+		$view->set('body', '内容です。');
+
+		return $view;
+	}
+	
+	public function action_test()
+	{
+		// ORMを使ったパターン
+
+		// $q['rows'] =  Model_Post::find('first', array(
+		// 	'where' => array(
+		// 			array('id', 1),
+		// 	),
+		// ));
+
+		// var_dump($q);
+		// Debug::dump($q);
+
+		// return Response::forge(View::forge('welcome/test',$q));
+		// // return View::forege('welcome/test',$q);
+
+		// クエリビルダを使ったパターン
+		$q = DB::select()->from('posts')->where('id', 1);
+		$view = $q->execute()->as_array();
+
+		foreach($view as $value){
+			$post['id'] = $value['id'];
+			$post['title'] = $value['title'];
+			$post['created_at'] = $value['created_at'];
+			$post['updated_at'] = $value['updated_at'];
+		}
+
+		return Response::forge(View::forge('welcome/test',$post));
 	}
 
 	/**

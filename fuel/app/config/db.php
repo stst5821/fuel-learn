@@ -21,5 +21,11 @@
  */
 
 return array(
-
+  'default' => array(
+    'connection'  => array(
+        'dsn'        => 'mysql:unix_socket=/Applications/MAMP/tmp/mysql/mysql.sock;dbname=blog',
+        'username'   => 'root',
+        'password'   => 'root',
+    ),
+),
 );
